@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>부동산 시세 트래커</title>
+<style>
+:root{
+  --bg:#f6f7f9; --card:#fff; --ink:#16181d; --muted:#6b7280; --line:#e5e7eb;
+  --accent:#03c75a; --up:#e5484d; --down:#2f6fe4; --chip:#eef1f4;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1115; --card:#181b21; --ink:#e8eaed; --muted:#9aa0a6; --line:#2a2e36;
+    --accent:#2fd67a; --up:#ff6b6f; --down:#6b9cff; --chip:#23272f;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:15px/1.5 -apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif}
+.wrap{max-width:1180px;margin:0 auto;padding:24px 16px 64px}
+h1{font-size:22px;margin:0 0 4px}
+.sub{color:var(--muted);font-size:13px;margin:0 0 20px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+form.card{display:grid;gap:14px;grid-template-columns:1fr;margin-bottom:18px}
+@media(min-width:820px){form.card{grid-template-columns:2fr auto auto auto auto;align-items:end}}
+label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
+input[type=text],select{width:100%;height:42px;border:1px solid var(--line);border-radius:10px;
+  padding:0 12px;font:inherit;background:var(--bg);color:var(--ink)}
+.seg{display:flex;background:var(--chip);border-radius:10px;padding:3px;gap:3px}
+.seg input{display:none}
+.seg label{margin:0;padding:8px 14px;border-radius:8px;cursor:pointer;color:var(--ink);font-size:14px;white-space:nowrap}
+.seg input:checked+label{background:var(--card);box-shadow:0 1px 3px rgba(0,0,0,.12);font-weight:600}
+button{height:42px;border:0;border-radius:10px;background:var(--accent);color:#fff;font:inherit;
+  font-weight:700;padding:0 22px;cursor:pointer}
+button:disabled{opacity:.5;cursor:wait}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.opts{grid-column:1/-1;display:flex;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.opts input[type=number]{width:64px;height:30px;border:1px solid var(--line);border-radius:8px;
+  background:var(--bg);color:var(--ink);padding:0 8px}
+.banner{padding:12px 14px;border-radius:10px;margin-bottom:14px;font-size:14px}
+.banner.err{background:color-mix(in srgb,var(--up) 14%,transparent);color:var(--up)}
+.banner.demo{background:color-mix(in srgb,#f5a524 18%,transparent);color:#b7791f}
+.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:18px 0}
+@media(min-width:820px){.kpis{grid-template-columns:repeat(4,1fr)}}
+.kpi .t{font-size:12px;color:var(--muted)}
+.kpi .v{font-size:24px;font-weight:700;margin-top:4px;font-variant-numeric:tabular-nums}
+.kpi .d{font-size:12px;color:var(--muted);margin-top:2px}
+.up{color:var(--up)} .down{color:var(--down)}
+.meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.chip{background:var(--chip);border-radius:999px;padding:3px 10px;font-size:12px;color:var(--muted)}
+h2{font-size:16px;margin:0 0 12px}
+section{margin-top:18px}
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13.5px;font-variant-numeric:tabular-nums}
+th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th{color:var(--muted);font-weight:600;font-size:12px;cursor:pointer;user-select:none;position:sticky;top:0;background:var(--card)}
+th:first-child,td:first-child,td.l,th.l{text-align:left}
+tr:hover td{background:color-mix(in srgb,var(--accent) 5%,transparent)}
+a{color:inherit}
+.tabs{display:flex;gap:6px;margin-bottom:12px}
+.tabs button{height:32px;background:var(--chip);color:var(--ink);font-weight:500;padding:0 14px;font-size:13px}
+.tabs button.on{background:var(--ink);color:var(--card)}
+#chart svg{width:100%;height:260px;display:block}
+.empty{color:var(--muted);padding:24px;text-align:center}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid currentColor;border-right-color:transparent;
+  border-radius:50%;animation:s .8s linear infinite;vertical-align:-2px;margin-right:6px}
+@keyframes s{to{transform:rotate(360deg)}}
+.foot{color:var(--muted);font-size:12px;margin-top:24px;line-height:1.7}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--card);font-size:12px;padding:6px 8px;border-radius:6px;display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🏠 부동산 시세 트래커</h1>
+  <p class="sub">지역명이나 지하철역을 넣으면 주변 단지의 네이버부동산 <b>호가</b>와 <b>실거래가</b>, 변동률을 모아서 보여줍니다.</p>
+
+  <form class="card" id="f">
+    <div>
+      <label for="q">지역명 또는 지하철역</label>
+      <input type="text" id="q" placeholder="예: 강남역, 역삼동, 판교, 마포구 아현동" required>
+    </div>
+    <div>
+      <label>유형</label>
+      <div class="seg">
+        <input type="radio" name="type" id="tA" value="APT" checked><label for="tA">아파트</label>
+        <input type="radio" name="type" id="tO" value="OPST"><label for="tO">오피스텔</label>
+        <input type="radio" name="type" id="tV" value="VL"><label for="tV">빌라</label>
+      </div>
+    </div>
+    <div>
+      <label>거래</label>
+      <div class="seg">
+        <input type="radio" name="trade" id="dA" value="A1" checked><label for="dA">매매</label>
+        <input type="radio" name="trade" id="dB" value="B1"><label for="dB">전세</label>
+      </div>
+    </div>
+    <div></div>
+    <button id="go">조회</button>
+    <div class="opts">
+      <span>반경 <input type="number" id="radius" value="1.5" min="0.3" max="5" step="0.1"> km</span>
+      <span>최대 단지 수 <input type="number" id="limit" value="12" min="1" max="40"></span>
+      <span><label style="display:inline;margin:0;color:inherit"><input type="checkbox" id="auto"> 5분마다 자동 새로고침</label></span>
+      <span id="status"></span>
+    </div>
+  </form>
+
+  <div id="msg"></div>
+  <div id="out"></div>
+
+  <p class="foot">
+    · 호가는 네이버부동산에 올라온 현재 매물 가격, 실거래가는 신고된 거래 가격입니다. 실거래가는 신고 기한(30일) 때문에 최근 1~2개월은 늦게 반영됩니다.<br>
+    · 평당가는 <b>전용면적</b> 기준(3.3058㎡ = 1평)입니다. 변동률은 월별 평당가 중앙값으로 계산합니다(최근 3개월 vs 직전 3개월, 최근 3개월 vs 1년 전 같은 3개월).<br>
+    · 호가 괴리율 = (호가 평당가 − 실거래 평당가) ÷ 실거래 평당가. 양수면 매도 희망가가 실거래보다 높다는 뜻입니다.<br>
+    · 데이터 출처: 네이버부동산(new.land.naver.com) / 국토교통부 실거래가(선택). 개인 참고용이며 투자 판단의 근거로 쓰기엔 한계가 있습니다.
+  </p>
+</div>
+<div class="tip" id="tip"></div>
+
+<script>
+const $ = s => document.querySelector(s);
+const won = v => { // 만원 -> "12억 5,000"
+  if (v == null) return "–";
+  v = Math.round(v);
+  const e = Math.floor(v / 10000), m = v % 10000;
+  return e ? (m ? `${e}억 ${m.toLocaleString()}` : `${e}억`) : `${m.toLocaleString()}만`;
+};
+const pp = v => v == null ? "–" : `${Math.round(v).toLocaleString()}만`;
+const chg = (v, suffix = "%") => v == null ? '<span>–</span>'
+  : `<span class="${v > 0 ? "up" : v < 0 ? "down" : ""}">${v > 0 ? "▲" : v < 0 ? "▼" : ""}${Math.abs(v).toFixed(1)}${suffix}</span>`;
+const ym = s => s ? `${s.slice(2, 4)}.${s.slice(4, 6)}` : "–";
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const typeName = {APT: "아파트", OPST: "오피스텔", VL: "빌라"};
+
+let timer = null, last = null;
+
+async function load(refresh = false) {
+  const q = $("#q").value.trim();
+  if (!q) return;
+  const params = new URLSearchParams({
+    q, type: document.querySelector("[name=type]:checked").value,
+    trade: document.querySelector("[name=trade]:checked").value,
+    radius: $("#radius").value, limit: $("#limit").value, refresh: refresh ? "1" : "0",
+  });
+  history.replaceState(null, "", "?" + params);
+  $("#go").disabled = true;
+  $("#status").innerHTML = '<span class="spinner"></span>네이버부동산에서 불러오는 중… (단지 수에 따라 30초~2분)';
+  $("#msg").innerHTML = "";
+  try {
+    const r = await fetch("/api/report?" + params);
+    const d = await r.json();
+    if (!r.ok || d.error) throw new Error(d.error || r.statusText);
+    last = d;
+    render(d);
+    $("#status").textContent = `마지막 갱신 ${new Date().toLocaleTimeString()}`;
+  } catch (e) {
+    const hint = location.protocol === "file:"
+      ? " — 이 파일을 직접 열면 동작하지 않습니다. 터미널에서 python3 server.py 실행 후 http://localhost:8000 으로 접속하세요." : "";
+    $("#msg").innerHTML = `<div class="banner err">⚠️ ${esc(e.message)}${hint}</div>`;
+    $("#status").textContent = "";
+  } finally {
+    $("#go").disabled = false;
+  }
+}
+
+function render(d) {
+  const s = d.summary;
+  const tn = d.tradeName;
+  let html = "";
+  if (d.demo) html += `<div class="banner demo">데모 모드입니다. 아래 숫자는 화면 확인용 가짜 데이터예요. 실제 시세는 <code>python3 server.py</code> (데모 옵션 없이) 로 실행하세요.</div>`;
+  html += `<div class="card">
+    <div style="font-size:18px;font-weight:700">${esc(d.center.name)} 주변 ${typeName[d.kind]} ${tn} 시세</div>
+    <div class="meta">
+      ${d.dongs.map(x => `<span class="chip">${esc(x.name)}${x.dist ? ` · ${x.dist}km` : ""}</span>`).join("")}
+      <span class="chip">실거래 출처: ${esc(d.tradeSource)}</span>
+      <span class="chip">${esc(d.generatedAt.replace("T", " "))}</span>
+    </div></div>`;
+  html += `<div class="kpis">
+    <div class="card kpi"><div class="t">호가 평당가 (중앙값)</div><div class="v">${pp(s.askPerPyeong)}</div>
+      <div class="d">매물 ${s.listingCount.toLocaleString()}건${s.complexCount ? ` · ${s.complexCount}개 단지` : ""}</div></div>
+    <div class="card kpi"><div class="t">실거래 평당가 (최근 3개월)</div><div class="v">${pp(s.recent3m)}</div>
+      <div class="d">거래 ${s.tradeCount3m}건</div></div>
+    <div class="card kpi"><div class="t">실거래 변동률</div><div class="v">${chg(s.change3m)}</div>
+      <div class="d">직전 3개월 대비 · 전년 동기 대비 ${chg(s.changeYoY)}</div></div>
+    <div class="card kpi"><div class="t">호가 괴리율</div><div class="v">${chg(s.askVsTrade)}</div>
+      <div class="d">호가가 실거래보다 ${s.askVsTrade == null ? "–" : s.askVsTrade >= 0 ? "높음" : "낮음"}</div></div>
+  </div>`;
+  html += `<div class="card"><h2>월별 실거래 평당가 추이</h2><div id="chart"></div></div>`;
+
+  if (d.complexes.length) {
+    html += `<section class="card"><h2>단지별 시세 · 변동률</h2><div class="tablewrap"><table id="tc">
+      <thead><tr>
+        <th class="l" data-k="name">단지</th><th data-k="dong">동</th><th data-k="dist">거리</th>
+        <th data-k="households">세대</th><th data-k="approve">준공</th><th data-k="listingCount">매물</th>
+        <th data-k="askMin">최저 호가</th><th data-k="askPerPyeong">호가 평당</th>
+        <th data-k="lastTrade">최근 실거래</th><th data-k="tradePerPyeong">실거래 평당</th>
+        <th data-k="tradeChange">1년 변동</th><th data-k="gap">호가 괴리</th>
+      </tr></thead><tbody></tbody></table></div></section>`;
+  }
+  html += `<section class="card"><div class="tabs">
+      <button class="on" data-tab="listings">현재 호가 매물 (${d.listings.length})</button>
+      <button data-tab="trades">최근 실거래 (${d.trades.length})</button></div>
+    <div id="tabbody"></div></section>`;
+  $("#out").innerHTML = html;
+
+  drawChart(d.series);
+  if (d.complexes.length) bindSort("#tc", d.complexes, complexRow, "askPerPyeong");
+  document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => {
+    document.querySelectorAll(".tabs button").forEach(x => x.classList.toggle("on", x === b));
+    showTab(b.dataset.tab);
+  });
+  showTab("listings");
+}
+
+const naverLink = (c) => c.complexNo && !last.demo
+  ? `<a href="https://new.land.naver.com/complexes/${c.complexNo}" target="_blank" rel="noopener">${esc(c.name)}</a>` : esc(c.name);
+const complexRow = c => `<tr>
+  <td>${naverLink(c)}</td><td>${esc(c.dong)}</td><td>${c.dist ?? "–"}km</td>
+  <td>${c.households?.toLocaleString() ?? "–"}</td><td>${esc(c.approve) || "–"}</td><td>${c.listingCount}</td>
+  <td>${won(c.askMin)}</td><td>${pp(c.askPerPyeong)}</td>
+  <td>${won(c.lastTrade)} <span style="color:var(--muted);font-size:11px">${ym(c.lastTradeYm)}</span></td>
+  <td>${pp(c.tradePerPyeong)}</td><td>${chg(c.tradeChange)}</td><td>${chg(c.gap)}</td></tr>`;
+
+function showTab(t) {
+  const d = last;
+  if (t === "listings") {
+    $("#tabbody").innerHTML = d.listings.length ? `<div class="tablewrap"><table id="tl"><thead><tr>
+      <th class="l" data-k="complex">단지/건물</th><th data-k="dong">동</th><th data-k="price">호가</th>
+      <th data-k="area">전용㎡</th><th data-k="perPyeong">평당</th><th data-k="floor">층</th>
+      <th data-k="direction">향</th><th data-k="confirmed">확인일</th><th class="l" data-k="realtor">중개사</th>
+      </tr></thead><tbody></tbody></table></div>` : `<div class="empty">현재 조건의 매물이 없습니다.</div>`;
+    if (d.listings.length) bindSort("#tl", d.listings, l => `<tr>
+      <td>${l.articleNo ? `<a href="https://new.land.naver.com/?articleNo=${l.articleNo}" target="_blank" rel="noopener">${esc(l.complex)}</a>` : esc(l.complex)}</td>
+      <td>${esc(l.dong)}</td><td><b>${esc(l.priceText) || won(l.price)}</b></td><td>${l.area ?? "–"}</td>
+      <td>${pp(l.perPyeong)}</td><td>${esc(l.floor) || "–"}</td><td>${esc(l.direction) || "–"}</td>
+      <td>${l.confirmed ? `${l.confirmed.slice(4, 6)}.${l.confirmed.slice(6, 8)}` : "–"}</td>
+      <td class="l" style="color:var(--muted)">${esc(l.realtor) || ""}</td></tr>`, null);
+  } else {
+    $("#tabbody").innerHTML = d.trades.length ? `<div class="tablewrap"><table id="tt"><thead><tr>
+      <th class="l" data-k="name">단지/건물</th><th data-k="dong">동</th><th data-k="ym">계약</th>
+      <th data-k="price">거래가</th><th data-k="area">전용㎡</th><th data-k="floor">층</th><th data-k="_pp">평당</th>
+      </tr></thead><tbody></tbody></table></div>`
+      : `<div class="empty">실거래 데이터가 없습니다.${d.kind === "VL" ? " 빌라 실거래는 국토부 API 키(MOLIT_API_KEY)를 설정하면 볼 수 있어요." : ""}</div>`;
+    d.trades.forEach(t => t._pp = t.area ? t.price / (t.area / 3.3058) : null);
+    if (d.trades.length) bindSort("#tt", d.trades, t => `<tr>
+      <td>${esc(t.name)}</td><td>${esc(t.dong)}</td><td>${t.ym.slice(0, 4)}.${t.ym.slice(4)}.${String(t.day).padStart(2, "0")}</td>
+      <td><b>${won(t.price)}</b></td><td>${t.area ? (+t.area).toFixed(1) : "–"}</td><td>${esc(t.floor) || "–"}</td>
+      <td>${pp(t._pp)}</td></tr>`, null);
+  }
+}
+
+function bindSort(sel, rows, rowFn, initKey) {
+  const tbl = $(sel);
+  let key = initKey, dir = -1;
+  const draw = () => {
+    const r = key ? [...rows].sort((a, b) => {
+      const x = a[key], y = b[key];
+      if (x == null) return 1; if (y == null) return -1;
+      return (typeof x === "number" ? x - y : String(x).localeCompare(String(y), "ko")) * dir;
+    }) : rows;
+    tbl.tBodies[0].innerHTML = r.map(rowFn).join("");
+    tbl.querySelectorAll("th").forEach(th => th.textContent = th.textContent.replace(/ [▲▼]$/, "")
+      + (th.dataset.k === key ? (dir > 0 ? " ▲" : " ▼") : ""));
+  };
+  tbl.querySelectorAll("th").forEach(th => th.onclick = () => {
+    if (key === th.dataset.k) dir = -dir; else { key = th.dataset.k; dir = -1; }
+    draw();
+  });
+  draw();
+}
+
+function drawChart(series) {
+  const el = $("#chart");
+  if (!series.length) { el.innerHTML = `<div class="empty">실거래 데이터가 부족해 추이를 그릴 수 없습니다.</div>`; return; }
+  const W = 1000, H = 260, P = {l: 70, r: 16, t: 14, b: 30};
+  const vals = series.map(s => s.avgPerPyeong);
+  let lo = Math.min(...vals), hi = Math.max(...vals);
+  const pad = (hi - lo) * 0.12 || hi * 0.05; lo -= pad; hi += pad;
+  const x = i => P.l + (series.length === 1 ? 0.5 : i / (series.length - 1)) * (W - P.l - P.r);
+  const y = v => P.t + (1 - (v - lo) / (hi - lo)) * (H - P.t - P.b);
+  const maxC = Math.max(...series.map(s => s.count));
+  let g = "";
+  for (let k = 0; k <= 4; k++) {
+    const v = lo + (hi - lo) * k / 4;
+    g += `<line x1="${P.l}" x2="${W - P.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/>
+          <text x="${P.l - 8}" y="${y(v) + 4}" text-anchor="end" font-size="11" fill="var(--muted)">${Math.round(v).toLocaleString()}</text>`;
+  }
+  const bw = Math.max(2, (W - P.l - P.r) / series.length * 0.5);
+  series.forEach((s, i) => {
+    const h = s.count / maxC * 40;
+    g += `<rect x="${x(i) - bw / 2}" y="${H - P.b - h}" width="${bw}" height="${h}" fill="var(--muted)" opacity=".18"/>`;
+    if (series.length <= 14 || i % Math.ceil(series.length / 12) === 0)
+      g += `<text x="${x(i)}" y="${H - 10}" text-anchor="middle" font-size="11" fill="var(--muted)">${ym(s.ym)}</text>`;
+  });
+  const path = series.map((s, i) => `${i ? "L" : "M"}${x(i)},${y(s.avgPerPyeong)}`).join("");
+  g += `<path d="${path}" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linejoin="round"/>`;
+  series.forEach((s, i) => g += `<circle cx="${x(i)}" cy="${y(s.avgPerPyeong)}" r="3.5" fill="var(--accent)"
+    data-tip="${s.ym.slice(0, 4)}.${s.ym.slice(4)} · 평당 ${s.avgPerPyeong.toLocaleString()}만 · ${s.count}건"/>
+    <rect x="${x(i) - 14}" y="${P.t}" width="28" height="${H - P.t - P.b}" fill="transparent" data-tip="${s.ym.slice(0, 4)}.${s.ym.slice(4)} · 평당 ${s.avgPerPyeong.toLocaleString()}만 · ${s.count}건"/>`);
+  el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">${g}</svg>
+    <div style="font-size:12px;color:var(--muted)">선: 월별 평당가 중앙값(만원) · 회색 막대: 거래 건수</div>`;
+  const tip = $("#tip");
+  el.querySelectorAll("[data-tip]").forEach(n => {
+    n.onmousemove = e => { tip.textContent = n.dataset.tip; tip.style.display = "block";
+      tip.style.left = e.pageX + 12 + "px"; tip.style.top = e.pageY - 30 + "px"; };
+    n.onmouseleave = () => tip.style.display = "none";
+  });
+}
+
+$("#f").onsubmit = e => { e.preventDefault(); load(); };
+$("#auto").onchange = e => {
+  clearInterval(timer);
+  if (e.target.checked) timer = setInterval(() => load(true), 5 * 60 * 1000);
+};
+// URL 파라미터로 바로 조회 (?q=강남역&type=APT)
+const p = new URLSearchParams(location.search);
+if (p.get("q")) {
+  $("#q").value = p.get("q");
+  if (p.get("type")) { const r = document.querySelector(`[name=type][value=${p.get("type")}]`); if (r) r.checked = true; }
+  if (p.get("trade")) { const r = document.querySelector(`[name=trade][value=${p.get("trade")}]`); if (r) r.checked = true; }
+  if (p.get("radius")) $("#radius").value = p.get("radius");
+  if (p.get("limit")) $("#limit").value = p.get("limit");
+  load();
+}
+</script>
+</body>
+</html>
