@@ -2,7 +2,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;800&family=Noto+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@500&display=swap">
 <style>
-/* Layout: single reading column; summary table first, then one section per restaurant, picks at the end */
+/* Layout: single reading column; dinner ranking first, then one section per restaurant in recommended order, lunch as a footnote */
 :root{
   --bg:#f5f4f1; --surface:#ffffff; --fg:#1d1b19; --muted:#6b645c; --line:#e2ddd5;
   --accent:#7a1f2b; --brass:#9a7330; --chip:#f1e7e4;
@@ -29,204 +29,204 @@ a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .num{font-family:var(--mono);font-variant-numeric:tabular-nums}
 .note{font-size:13px;color:var(--muted)}
 .tablebox{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
-table{border-collapse:collapse;width:100%;min-width:640px;font-size:14px}
+table{border-collapse:collapse;width:100%;min-width:660px;font-size:14px}
 th,td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
 th{font-size:12px;letter-spacing:.06em;color:var(--muted);font-weight:500}
 tr:last-child td{border-bottom:0}
-td.r,th.r{text-align:right}
+td.r,th.r{text-align:right;white-space:nowrap}
 .big{font-size:17px;font-weight:500}
+.rank{font-family:var(--mono);color:var(--brass);font-weight:500}
+.stars{color:var(--brass);letter-spacing:1px;white-space:nowrap}
 section.r{display:flex;flex-direction:column;gap:16px;padding-top:28px;border-top:1px solid var(--line)}
 .head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px}
+.head h2 span{font-family:var(--mono);font-size:15px;color:var(--brass);margin-right:8px}
 .meta{font-size:13px;color:var(--muted)}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .chip{background:var(--chip);color:var(--accent);font-size:12px;padding:3px 10px;border-radius:999px;font-weight:500}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 @media (max-width:640px){.grid{grid-template-columns:1fr}}
 .box{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px;display:flex;flex-direction:column;gap:8px;min-width:0}
-.box ul{margin:0;padding-left:18px}
-.box li{margin:2px 0}
 .price-row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed var(--line);padding-block:4px}
 .price-row:last-of-type{border-bottom:0}
 .total{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-top:4px;padding-top:8px;border-top:1px solid var(--line)}
 .total b{font-family:var(--mono);font-size:20px;color:var(--accent)}
+.order{background:var(--chip);border-radius:8px;padding:10px 14px;font-size:14px}
+.order b{color:var(--accent)}
 .photos{display:flex;flex-wrap:wrap;gap:8px}
 .photos a{display:inline-block;text-decoration:none;font-size:13px;font-weight:500;border:1px solid var(--line);background:var(--surface);color:var(--fg);padding:6px 12px;border-radius:6px}
 .photos a:hover{border-color:var(--accent);color:var(--accent)}
-.picks{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
-.pick{border-left:3px solid var(--brass);padding:4px 0 4px 14px;display:flex;flex-direction:column;gap:4px}
-.pick .k{font-size:12px;color:var(--brass);font-weight:700;letter-spacing:.06em}
+.lunch{font-size:13px;color:var(--muted);border-top:1px dashed var(--line);padding-top:8px}
+.tips{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;max-width:70ch}
 </style>
 
 <div class="wrap">
 
 <header>
-  <div class="eyebrow">Honeymoon · New York · 2인 기준</div>
-  <h1>뉴욕 스테이크하우스 5곳 비교</h1>
-  <p class="lede">벤자민, 갤러거스, 킨스, 스미스앤월렌스키, 울프강 5곳의 매장 분위기와 점심·저녁 예상 비용을 2인 기준으로 정리했습니다. 가격은 2025~2026년 공식 메뉴와 예약·주문 사이트에 올라온 값이고, 메뉴는 수시로 바뀌니 방문 전 공식 사이트에서 한 번 더 확인하세요.</p>
+  <div class="eyebrow">Honeymoon Dinner · New York · 2인 기준</div>
+  <h1>뉴욕 스테이크하우스 5곳, 저녁 추천 순위</h1>
+  <p class="lede">신혼여행 저녁 식사 기준으로 킨스, 울프강, 벤자민, 갤러거스, 스미스앤월렌스키를 분위기 순으로 정리했습니다. 가격은 2025~2026년 공식 메뉴와 예약·주문 사이트에 올라온 값이고, 식당마다 2인이 시킬 메뉴 조합과 세금·팁을 포함한 예상 금액을 적었습니다.</p>
 </header>
 
 <section style="display:flex;flex-direction:column;gap:14px">
-  <h2>한눈에 비교</h2>
+  <h2>저녁 추천 순위</h2>
   <div class="tablebox">
   <table>
-    <thead><tr><th>식당</th><th>분위기</th><th>포터하우스 2인</th><th class="r">점심 2인 (세금·팁 포함)</th><th class="r">저녁 2인 (세금·팁 포함)</th></tr></thead>
+    <thead><tr><th>순위</th><th>식당</th><th>저녁 분위기</th><th>로맨틱</th><th class="r">저녁 2인 (세금·팁 포함)</th></tr></thead>
     <tbody>
-      <tr><td><b>킨스 Keens</b><br><span class="note">미드타운 36th St</span></td><td>1885년, 천장 가득 담배 파이프, 클래식한 옛 뉴욕</td><td class="num">$143</td><td class="r num big">약 $170</td><td class="r num big">약 $270</td></tr>
-      <tr><td><b>울프강 Wolfgang's</b><br><span class="note">파크 애비뉴 본점</span></td><td>아치형 타일 천장, 우아하고 밝은 홀</td><td class="num">$100~156</td><td class="r num big">약 $160~180</td><td class="r num big">약 $210~285</td></tr>
-      <tr><td><b>벤자민 Benjamin</b><br><span class="note">그랜드센트럴 근처 41st St</span></td><td>높은 천장, 벽난로, 샹들리에의 클럽 분위기</td><td class="num">$160.95</td><td class="r num big">약 $116</td><td class="r num big">약 $280</td></tr>
-      <tr><td><b>갤러거스 Gallaghers</b><br><span class="note">브로드웨이 극장가 52nd St</span></td><td>입구의 숙성고 유리창, 1927년 사진들</td><td class="num">$143~144</td><td class="r num big">약 $90~120</td><td class="r num big">약 $270</td></tr>
-      <tr><td><b>스미스앤월렌스키</b><br><span class="note">3rd Ave & 49th St</span></td><td>초록·흰색 건물, 활기찬 2층 홀</td><td class="num">$155</td><td class="r num big">약 $160</td><td class="r num big">약 $285</td></tr>
+      <tr><td class="rank">1</td><td><b>킨스 Keens</b><br><span class="note">미드타운 36th St</span></td><td>은은한 조명, 천장 가득한 옛 담배 파이프, 1885년의 공간</td><td class="stars">★★★★★</td><td class="r num big">약 $270</td></tr>
+      <tr><td class="rank">2</td><td><b>울프강 Wolfgang's</b><br><span class="note">파크 애비뉴 지점</span></td><td>아치형 타일 천장 아래의 웅장한 홀</td><td class="stars">★★★★☆</td><td class="r num big">약 $210~285</td></tr>
+      <tr><td class="rank">3</td><td><b>벤자민 Benjamin</b><br><span class="note">그랜드센트럴 근처 41st St</span></td><td>벽난로와 샹들리에, 조용한 클럽 분위기</td><td class="stars">★★★★☆</td><td class="r num big">약 $280</td></tr>
+      <tr><td class="rank">4</td><td><b>갤러거스 Gallaghers</b><br><span class="note">브로드웨이 극장가 52nd St</span></td><td>숙성고 유리창, 1927년 흑백 사진, 공연 전후로 붐빔</td><td class="stars">★★★☆☆</td><td class="r num big">약 $270</td></tr>
+      <tr><td class="rank">5</td><td><b>스미스앤월렌스키</b><br><span class="note">3rd Ave & 49th St</span></td><td>크고 활기찬 2층 홀, 대화하기엔 시끄러운 편</td><td class="stars">★★★☆☆</td><td class="r num big">약 $285</td></tr>
     </tbody>
   </table>
   </div>
-  <p class="note">계산 기준: 음식값 + 뉴욕 세금 8.875% + 팁 20% (합계 약 ×1.29). 저녁은 포터하우스 2인 + 애피타이저 1 + 사이드 2 + 디저트 1. 와인·칵테일은 제외했고, 2잔씩 마시면 2인 기준 $80~120 정도가 더 붙습니다.</p>
+  <p class="note">계산 기준: 포터하우스 2인 + 애피타이저 1 + 사이드 2 + 디저트 1, 여기에 뉴욕 세금 8.875%와 팁 20%를 더했습니다(합계 약 ×1.29). 와인·칵테일은 제외했고, 2잔씩 마시면 2인 기준 $80~120 정도가 더 붙습니다.</p>
 </section>
 
 <!-- KEENS -->
 <section class="r">
-  <div class="head"><h2>킨스 스테이크하우스</h2><span class="meta">72 W 36th St · 1885년 개업</span></div>
-  <div class="chips"><span class="chip">신혼여행 분위기 최고</span><span class="chip">머튼찹 시그니처</span><span class="chip">점심은 평일 위주</span></div>
+  <div class="head"><h2><span>1</span>킨스 스테이크하우스</h2><span class="meta">72 W 36th St · 1885년 개업</span></div>
+  <div class="chips"><span class="chip">신혼여행 저녁 1순위</span><span class="chip">머튼찹 시그니처</span><span class="chip">예약 경쟁 치열</span></div>
   <div class="grid">
     <div class="box">
-      <h3>매장 분위기</h3>
-      <p>어두운 원목, 붉은 조명, 천장을 빼곡하게 덮은 수만 개의 옛 담배 파이프가 상징입니다. 방이 여러 개로 나뉘어 있고 벽마다 19세기 포스터와 기념품이 걸려 있어 박물관 같은 느낌입니다. 5곳 중 가장 "옛 뉴욕"다운 공간이라 기념일 저녁으로 추천합니다.</p>
+      <h3>저녁 분위기</h3>
+      <p>어두운 원목과 붉은 조명 아래, 천장을 빼곡하게 덮은 수만 개의 옛 담배 파이프가 상징입니다. 방이 여러 개로 나뉘어 있고 벽마다 19세기 포스터와 기념품이 걸려 있습니다. 저녁에는 조명이 더 낮아져 기념일 식사에 가장 잘 어울립니다.</p>
       <div class="photos">
-        <a href="https://www.google.com/maps/search/?api=1&query=Keens+Steakhouse+72+W+36th+St+New+York" target="_blank" rel="noopener">구글맵 사진</a>
+        <a href="https://www.google.com/maps/search/?api=1&query=Keens+Steakhouse+72+W+36th+St+New+York" target="_blank" rel="noopener">구글맵 매장·음식 사진</a>
         <a href="https://www.yelp.com/biz_photos/keens-steakhouse-new-york" target="_blank" rel="noopener">Yelp 사진</a>
         <a href="https://www.keens.com" target="_blank" rel="noopener">공식 사이트</a>
       </div>
     </div>
     <div class="box">
-      <h3>주요 가격</h3>
+      <h3>저녁 가격</h3>
       <div class="price-row"><span>프라임 포터하우스 2인</span><span class="num">$143</span></div>
       <div class="price-row"><span>레전더리 머튼찹 (1인)</span><span class="num">$73</span></div>
       <div class="price-row"><span>포터하우스 3인</span><span class="num">$177</span></div>
       <div class="total"><span>저녁 2인 예상</span><b>≈ $270</b></div>
-      <div class="total"><span>점심 2인 예상<br><span class="note">머튼찹 1 + 가벼운 메뉴 1 + 사이드</span></span><b>≈ $170</b></div>
-      <p class="note">점심 전용 세트는 없고 점심 메뉴에도 같은 스테이크가 올라옵니다. 저녁 예약이 어려우면 평일 점심이 훨씬 잡기 쉽습니다.</p>
+      <div class="order"><b>2인 주문 추천</b> 머튼찹 1 + 프라임 립이나 서로인 1을 나눠 먹으면 두 시그니처를 다 맛볼 수 있습니다.</div>
+      <p class="lunch">점심: 평일 위주로 운영하고 같은 스테이크를 팝니다. 2인 약 $170.</p>
     </div>
   </div>
 </section>
 
 <!-- WOLFGANG -->
 <section class="r">
-  <div class="head"><h2>울프강 스테이크하우스</h2><span class="meta">4 Park Ave (33rd St) · 파크 애비뉴 지점</span></div>
-  <div class="chips"><span class="chip">인테리어가 가장 화려함</span><span class="chip">피터루거 스타일 포터하우스</span><span class="chip">점심 영업</span></div>
+  <div class="head"><h2><span>2</span>울프강 스테이크하우스</h2><span class="meta">4 Park Ave (33rd St) · 파크 애비뉴 지점</span></div>
+  <div class="chips"><span class="chip">인테리어가 가장 화려함</span><span class="chip">드라이에이징 포터하우스</span><span class="chip">저녁 가격 부담 적음</span></div>
   <div class="grid">
     <div class="box">
-      <h3>매장 분위기</h3>
-      <p>옛 밴더빌트 호텔 식당 자리에 있어 구아스타비노 타일로 된 아치형 천장이 그대로 남아 있습니다. 밝고 웅장한 홀이라 사진이 예쁘게 나옵니다. 울프강은 뉴욕에 지점이 여러 곳(54th St, 트라이베카, 타임스스퀘어)이니 이 분위기를 원하면 꼭 파크 애비뉴 지점으로 예약하세요.</p>
+      <h3>저녁 분위기</h3>
+      <p>옛 밴더빌트 호텔 식당 자리에 있어 구아스타비노 타일로 된 아치형 천장이 그대로 남아 있습니다. 저녁 조명을 받으면 타일 천장이 따뜻하게 빛나서 사진이 예쁘게 나옵니다. 울프강은 뉴욕에 지점이 여러 곳이니 꼭 파크 애비뉴 지점으로 예약하세요.</p>
       <div class="photos">
-        <a href="https://www.google.com/maps/search/?api=1&query=Wolfgang's+Steakhouse+4+Park+Ave+New+York" target="_blank" rel="noopener">구글맵 사진</a>
+        <a href="https://www.google.com/maps/search/?api=1&query=Wolfgang's+Steakhouse+4+Park+Ave+New+York" target="_blank" rel="noopener">구글맵 매장·음식 사진</a>
         <a href="https://www.opentable.com/wolfgangs-steak-house-park-avenue/photos" target="_blank" rel="noopener">OpenTable 사진</a>
         <a href="https://www.yelp.com/biz_photos/wolfgangs-steakhouse-new-york-4" target="_blank" rel="noopener">Yelp 사진</a>
       </div>
     </div>
     <div class="box">
-      <h3>주요 가격</h3>
+      <h3>저녁 가격</h3>
       <div class="price-row"><span>포터하우스 (1인당)</span><span class="num">$49.95~77.95</span></div>
       <div class="price-row"><span>립아이</span><span class="num">$53.95</span></div>
       <div class="price-row"><span>필레미뇽</span><span class="num">$49.95</span></div>
       <div class="price-row"><span>크랩케이크</span><span class="num">$19.95</span></div>
       <div class="total"><span>저녁 2인 예상</span><b>≈ $210~285</b></div>
-      <div class="total"><span>점심 2인 예상</span><b>≈ $160~180</b></div>
-      <p class="note">포터하우스 가격이 Yelp(2026.11)와 공식 사이트에서 크게 달라 범위로 표시했습니다. 점심 스페셜 가격은 확인하지 못했으니 예약할 때 물어보세요.</p>
+      <div class="order"><b>2인 주문 추천</b> 포터하우스 2인 + 두꺼운 베이컨 + 크림 스피니치·저먼 포테이토. 서버가 테이블에서 잘라 줍니다.</div>
+      <p class="lunch">포터하우스 가격이 Yelp(2026.11)와 공식 사이트에서 달라 범위로 적었습니다. 점심 2인 약 $160~180.</p>
     </div>
   </div>
 </section>
 
 <!-- BENJAMIN -->
 <section class="r">
-  <div class="head"><h2>벤자민 스테이크하우스</h2><span class="meta">52 E 41st St · 그랜드센트럴 도보 3분</span></div>
-  <div class="chips"><span class="chip">점심 가성비</span><span class="chip">두꺼운 베이컨</span><span class="chip">조용하고 고급스러움</span></div>
+  <div class="head"><h2><span>3</span>벤자민 스테이크하우스</h2><span class="meta">52 E 41st St · 그랜드센트럴 도보 3분</span></div>
+  <div class="chips"><span class="chip">조용하고 고급스러움</span><span class="chip">두꺼운 베이컨</span><span class="chip">대화하기 좋음</span></div>
   <div class="grid">
     <div class="box">
-      <h3>매장 분위기</h3>
-      <p>옛 케미스트 클럽 건물 안에 있어 천장이 높고, 큰 벽난로와 샹들리에, 원목 패널이 있는 사교 클럽 같은 분위기입니다. 비교적 조용해서 대화하며 식사하기 좋습니다. 이름이 비슷한 "벤자민 프라임"은 다른 지점이니 주소를 확인하세요.</p>
+      <h3>저녁 분위기</h3>
+      <p>옛 케미스트 클럽 건물 안에 있어 천장이 높고, 큰 벽난로와 샹들리에, 원목 패널이 있는 사교 클럽 같은 분위기입니다. 2월 저녁에는 벽난로 옆자리가 특히 좋습니다. 다섯 곳 중 가장 조용해 대화하며 식사하기 좋습니다. 이름이 비슷한 "벤자민 프라임"은 다른 지점이니 주소를 확인하세요.</p>
       <div class="photos">
-        <a href="https://www.google.com/maps/search/?api=1&query=Benjamin+Steakhouse+52+E+41st+St+New+York" target="_blank" rel="noopener">구글맵 사진</a>
+        <a href="https://www.google.com/maps/search/?api=1&query=Benjamin+Steakhouse+52+E+41st+St+New+York" target="_blank" rel="noopener">구글맵 매장·음식 사진</a>
         <a href="https://www.yelp.com/biz_photos/benjamin-steakhouse-new-york-4" target="_blank" rel="noopener">Yelp 사진</a>
         <a href="https://benjaminsteakhouse.com/nyc/our-menus" target="_blank" rel="noopener">공식 메뉴</a>
       </div>
     </div>
     <div class="box">
-      <h3>주요 가격</h3>
+      <h3>저녁 가격</h3>
       <div class="price-row"><span>포터하우스 2인</span><span class="num">$160.95</span></div>
       <div class="price-row"><span>립아이</span><span class="num">$96.95</span></div>
       <div class="price-row"><span>뉴욕 서로인 / 필레미뇽</span><span class="num">$84.95</span></div>
       <div class="price-row"><span>두꺼운 베이컨</span><span class="num">$9.95</span></div>
-      <div class="price-row"><span>점심 프릭스픽스 (1인)</span><span class="num">$45</span></div>
       <div class="total"><span>저녁 2인 예상</span><b>≈ $280</b></div>
-      <div class="total"><span>점심 2인 예상<br><span class="note">프릭스픽스 ×2</span></span><b>≈ $116</b></div>
-      <p class="note">점심 프릭스픽스 $45는 2025년 12월 Yelp 기준입니다. 2026년 현재 운영 여부를 확인하세요.</p>
+      <div class="order"><b>2인 주문 추천</b> 베이컨 1장씩으로 시작해서 포터하우스 2인 + 사이드 2. 예약 메모에 벽난로 옆 테이블을 요청해 보세요.</div>
+      <p class="lunch">점심: 프릭스픽스 1인 $45 (2025년 12월 기준). 2인 약 $116로 다섯 곳 중 가장 저렴합니다.</p>
     </div>
   </div>
 </section>
 
 <!-- GALLAGHERS -->
 <section class="r">
-  <div class="head"><h2>갤러거스 스테이크하우스</h2><span class="meta">228 W 52nd St · 1927년 개업</span></div>
-  <div class="chips"><span class="chip">점심 최저가</span><span class="chip">뮤지컬 전후 식사</span><span class="chip">점심 매일 운영</span></div>
+  <div class="head"><h2><span>4</span>갤러거스 스테이크하우스</h2><span class="meta">228 W 52nd St · 1927년 개업</span></div>
+  <div class="chips"><span class="chip">뮤지컬 전후 저녁</span><span class="chip">히코리 숯불</span><span class="chip">극장가 한복판</span></div>
   <div class="grid">
     <div class="box">
-      <h3>매장 분위기</h3>
-      <p>입구 쪽 유리창 너머로 고기가 걸린 드라이에이징 숙성고가 보이는 것이 상징입니다. 안쪽은 원목과 체크무늬 테이블보, 스포츠 스타·경주마·브로드웨이 배우 흑백 사진이 벽을 채운 클래식 다이닝룸입니다. 극장가 한복판이라 뮤지컬 관람과 묶기 좋습니다.</p>
+      <h3>저녁 분위기</h3>
+      <p>입구 쪽 유리창 너머로 고기가 걸린 드라이에이징 숙성고가 보입니다. 안쪽은 원목과 체크무늬 테이블보, 스포츠 스타와 브로드웨이 배우의 흑백 사진이 벽을 채운 클래식 다이닝룸입니다. 저녁 6시 전후와 공연이 끝난 10시 이후에 가장 붐빕니다.</p>
       <div class="photos">
-        <a href="https://www.google.com/maps/search/?api=1&query=Gallaghers+Steakhouse+228+W+52nd+St+New+York" target="_blank" rel="noopener">구글맵 사진</a>
+        <a href="https://www.google.com/maps/search/?api=1&query=Gallaghers+Steakhouse+228+W+52nd+St+New+York" target="_blank" rel="noopener">구글맵 매장·음식 사진</a>
         <a href="https://www.yelp.com/biz_photos/gallaghers-steakhouse-new-york" target="_blank" rel="noopener">Yelp 사진</a>
         <a href="https://www.gallaghersnysteakhouse.com/menus-new-york" target="_blank" rel="noopener">공식 메뉴</a>
       </div>
     </div>
     <div class="box">
-      <h3>주요 가격</h3>
+      <h3>저녁 가격</h3>
       <div class="price-row"><span>포터하우스 (1인당 $72, 2인부터)</span><span class="num">$144</span></div>
       <div class="price-row"><span>뉴욕 서로인</span><span class="num">$64</span></div>
       <div class="price-row"><span>필레미뇽</span><span class="num">$58</span></div>
       <div class="price-row"><span>립 스테이크</span><span class="num">$76</span></div>
-      <div class="price-row"><span>점심 3코스 프릭스픽스 (1인)</span><span class="num">$34~</span></div>
       <div class="total"><span>저녁 2인 예상</span><b>≈ $270</b></div>
-      <div class="total"><span>점심 2인 예상<br><span class="note">프릭스픽스 ×2</span></span><b>≈ $90~120</b></div>
-      <p class="note">점심은 매일 11:45~16:00이고 저녁 메뉴도 주문할 수 있습니다. 프릭스픽스 $34는 리뷰 기준이라 지금은 더 올랐을 수 있습니다.</p>
+      <div class="order"><b>2인 주문 추천</b> 공연 전이라면 5시 예약으로 포터하우스 2인 + 사이드 1만 시키고 디저트는 생략하면 1시간 반 안에 끝납니다.</div>
+      <p class="lunch">점심: 매일 11:45~16:00, 3코스 프릭스픽스 1인 $34부터. 2인 약 $90~120.</p>
     </div>
   </div>
 </section>
 
 <!-- SMITH & WOLLENSKY -->
 <section class="r">
-  <div class="head"><h2>스미스앤월렌스키</h2><span class="meta">797 3rd Ave (49th St) · 1977년 개업</span></div>
-  <div class="chips"><span class="chip">영화 속 그 장소</span><span class="chip">활기찬 분위기</span><span class="chip">점심 평일만</span></div>
+  <div class="head"><h2><span>5</span>스미스앤월렌스키</h2><span class="meta">797 3rd Ave (49th St) · 1977년 개업</span></div>
+  <div class="chips"><span class="chip">영화 속 그 장소</span><span class="chip">활기찬 분위기</span><span class="chip">코코넛 케이크</span></div>
   <div class="grid">
     <div class="box">
-      <h3>매장 분위기</h3>
-      <p>초록색과 흰색으로 칠한 독립 건물이 랜드마크이고, 영화 〈악마는 프라다를 입는다〉에도 나옵니다. 2층 규모의 큰 홀은 원목과 놋쇠 장식으로 클래식하지만 사람이 많아 꽤 시끄럽고 활기찹니다. 1층의 캐주얼한 월렌스키스 그릴은 좀 더 가볍게 먹기 좋습니다.</p>
+      <h3>저녁 분위기</h3>
+      <p>초록색과 흰색으로 칠한 독립 건물이 랜드마크이고, 영화 〈악마는 프라다를 입는다〉에도 나옵니다. 2층 규모의 큰 홀은 원목과 놋쇠 장식으로 클래식하지만, 저녁에는 비즈니스 손님이 많아 꽤 시끄럽습니다. 조용한 자리를 원하면 2층을 요청하세요.</p>
       <div class="photos">
-        <a href="https://www.google.com/maps/search/?api=1&query=Smith+%26+Wollensky+797+3rd+Ave+New+York" target="_blank" rel="noopener">구글맵 사진</a>
+        <a href="https://www.google.com/maps/search/?api=1&query=Smith+%26+Wollensky+797+3rd+Ave+New+York" target="_blank" rel="noopener">구글맵 매장·음식 사진</a>
         <a href="https://www.opentable.com/r/smith-and-wollensky-new-york" target="_blank" rel="noopener">OpenTable 사진</a>
         <a href="https://www.smithandwollenskynyc.com/menu/" target="_blank" rel="noopener">공식 메뉴</a>
       </div>
     </div>
     <div class="box">
-      <h3>주요 가격</h3>
+      <h3>저녁 가격</h3>
       <div class="price-row"><span>포터하우스 2인</span><span class="num">$155</span></div>
       <div class="price-row"><span>뉴욕 컷 서로인</span><span class="num">$64 / $72</span></div>
       <div class="price-row"><span>본인 립 스테이크</span><span class="num">$82</span></div>
-      <div class="price-row"><span>메인 랍스터 롤 (점심)</span><span class="num">$44</span></div>
       <div class="price-row"><span>프릭스픽스 코스 (1인)</span><span class="num">$95</span></div>
       <div class="total"><span>저녁 2인 예상</span><b>≈ $285</b></div>
-      <div class="total"><span>점심 2인 예상<br><span class="note">서로인 1 + 랍스터 롤 1 + 사이드</span></span><b>≈ $160</b></div>
-      <p class="note">점심은 월~금 11:45~14:00. 레스토랑 위크(1~2월, 7~8월)에는 점심 코스가 $60 정도로 내려갑니다.</p>
+      <div class="order"><b>2인 주문 추천</b> 케이준 립 스테이크나 포터하우스 2인 + 사이드 2, 마무리는 유명한 코코넛 케이크 하나를 나눠 드세요.</div>
+      <p class="lunch">점심: 월~금 11:45~14:00. 2인 약 $160.</p>
     </div>
   </div>
 </section>
 
-<section style="display:flex;flex-direction:column;gap:16px;padding-top:28px;border-top:1px solid var(--line)">
-  <h2>신혼여행 추천 조합</h2>
-  <div class="picks">
-    <div class="pick"><span class="k">기념 저녁</span><b>킨스</b><p class="note">가장 분위기 있는 공간. 머튼찹과 포터하우스를 나눠 먹는 것을 추천합니다.</p></div>
-    <div class="pick"><span class="k">사진 맛집</span><b>울프강 파크 애비뉴</b><p class="note">아치형 타일 천장 아래에서의 식사. 점심으로 가도 분위기가 충분합니다.</p></div>
-    <div class="pick"><span class="k">가성비 점심</span><b>벤자민 또는 갤러거스</b><p class="note">점심 코스로 2인 $100 안팎. 갤러거스는 뮤지컬 전 식사로 동선이 좋습니다.</p></div>
-  </div>
-  <p class="note">예약은 OpenTable이나 Resy에서 2~4주 전에 하는 것이 안전합니다. 예약 메모에 "honeymoon"이라고 적으면 디저트에 축하 문구를 올려주는 곳이 많습니다. 드레스코드는 다섯 곳 모두 비즈니스 캐주얼이면 충분합니다.</p>
+<section style="display:flex;flex-direction:column;gap:14px;padding-top:28px;border-top:1px solid var(--line)">
+  <h2>저녁 예약 팁</h2>
+  <ol class="tips">
+    <li>예약은 OpenTable이나 Resy에서 2~4주 전에 하세요. 킨스는 금·토 저녁이 특히 빨리 찹니다.</li>
+    <li>예약 메모에 "honeymoon"이라고 적으면 디저트에 축하 문구를 올려주는 곳이 많습니다.</li>
+    <li>저녁 7~8시가 가장 붐빕니다. 6시나 9시 이후로 잡으면 자리도 좋고 서비스도 여유롭습니다.</li>
+    <li>드레스코드는 다섯 곳 모두 비즈니스 캐주얼이면 충분합니다. 2월이라 코트를 맡기는 곳이 있으니 코트 체크 팁 $2~3을 준비하세요.</li>
+  </ol>
+  <p class="note">매장과 음식 사진은 각 식당의 "구글맵 매장·음식 사진" 버튼을 누르면 실제 방문자 사진을 바로 볼 수 있습니다. 메뉴와 가격은 수시로 바뀌니 방문 전 공식 사이트에서 한 번 더 확인하세요.</p>
 </section>
 
 </div>
