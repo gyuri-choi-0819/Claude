@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>린린채 대화 요약</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f6f3ec;
+    --card: #ffffff;
+    --text: #23211d;
+    --muted: #6f6a60;
+    --line: #e6e0d4;
+    --accent: #c4673a;
+    --accent-soft: #f7e6dc;
+    --blue: #3f6fb5;
+    --blue-soft: #e3ecf8;
+    --red: #b8433f;
+    --red-soft: #f6e1df;
+    --green: #3d8a5f;
+    --green-soft: #e0f1e7;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1a1916; --card: #24231f; --text: #ece8df; --muted: #a29c90; --line: #36342e;
+      --accent: #e08a5e; --accent-soft: #3a2a20;
+      --blue: #82a8e0; --blue-soft: #1f2b3d;
+      --red: #e37f7a; --red-soft: #3b2423;
+      --green: #7cc59b; --green-soft: #1f3328;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1a1916; --card: #24231f; --text: #ece8df; --muted: #a29c90; --line: #36342e;
+    --accent: #e08a5e; --accent-soft: #3a2a20;
+    --blue: #82a8e0; --blue-soft: #1f2b3d;
+    --red: #e37f7a; --red-soft: #3b2423;
+    --green: #7cc59b; --green-soft: #1f3328;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: "Noto Sans KR", system-ui, sans-serif; line-height: 1.7;
+    word-break: keep-all;
+  }
+  main { max-width: 720px; margin: 0 auto; padding: 40px 16px 64px; }
+  header { margin-bottom: 28px; }
+  .eyebrow { font-size: 13px; color: var(--muted); letter-spacing: .02em; }
+  h1 { font-size: 28px; margin: 6px 0 14px; line-height: 1.3; }
+  .tldr {
+    background: var(--accent-soft); border-left: 4px solid var(--accent);
+    padding: 14px 18px; border-radius: 10px; font-weight: 500;
+  }
+  .tldr b { color: var(--accent); }
+  section {
+    background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+    padding: 20px 22px; margin-top: 18px;
+  }
+  h2 { font-size: 18px; margin: 0 0 12px; display: flex; align-items: center; gap: 10px; }
+  .num {
+    flex: none; width: 26px; height: 26px; border-radius: 50%;
+    display: inline-grid; place-items: center; font-size: 13px; font-weight: 700;
+  }
+  .s1 .num { background: var(--blue-soft); color: var(--blue); }
+  .s2 .num { background: var(--red-soft); color: var(--red); }
+  .s3 .num { background: var(--green-soft); color: var(--green); }
+  ol.timeline { list-style: none; margin: 0; padding: 0; position: relative; }
+  ol.timeline li { position: relative; padding: 0 0 14px 22px; }
+  ol.timeline li::before {
+    content: ""; position: absolute; left: 4px; top: 10px; width: 8px; height: 8px;
+    border-radius: 50%; background: var(--blue);
+  }
+  ol.timeline li::after {
+    content: ""; position: absolute; left: 7.5px; top: 22px; bottom: 0; width: 1px; background: var(--line);
+  }
+  ol.timeline li:last-child { padding-bottom: 0; }
+  ol.timeline li:last-child::after { display: none; }
+  ul { margin: 0; padding-left: 20px; }
+  ul li { margin-bottom: 8px; }
+  ul li:last-child { margin-bottom: 0; }
+  .quote {
+    margin: 12px 0; padding: 10px 14px; border-radius: 10px;
+    background: var(--red-soft); color: var(--text); font-size: 15px;
+  }
+  .quote::before { content: "📞 "; }
+  mark { background: none; color: var(--red); font-weight: 700; }
+  .tag {
+    display: inline-block; font-size: 12px; padding: 1px 8px; border-radius: 999px;
+    background: var(--line); color: var(--muted); margin-left: 4px; vertical-align: 2px;
+  }
+  .ending {
+    margin-top: 14px; padding: 10px 14px; border-radius: 10px;
+    background: var(--green-soft); color: var(--green); font-weight: 500;
+  }
+  footer { margin-top: 28px; font-size: 13px; color: var(--muted); text-align: center; }
+  @media (max-width: 480px) {
+    h1 { font-size: 23px; }
+    section { padding: 18px 16px; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="eyebrow">린린채 카톡 · 오후 3:08 ~ 3:12</div>
+    <h1>최선을 다하고 퇴근했는데<br>책임 전가당한 썰</h1>
+    <div class="tldr">
+      <b>한 줄 요약</b> — 인수인계까지 다 하고 퇴근했는데, 삼성 설비 담당자가 별것 아닌 문제로 매니저한테까지 전화해 책임을 떠넘김. 억울하고 화났지만 털어놓고 나니 좀 풀림.
+    </div>
+  </header>
+
+  <section class="s1">
+    <h2><span class="num">1</span>무슨 일이 있었나 <span class="tag">화요일</span></h2>
+    <ol class="timeline">
+      <li>5시 반까지 해야 하는 작업이 잘 안 돼서 <b>두 시간 넘게</b> 붙잡고 라인 설비를 살려놓음</li>
+      <li>마지막에 <b>설비 리셋 버튼</b>을 눌러야 했는데, 설비 엔지니어들이 전부 퇴근해서 누를 사람이 없음</li>
+      <li>야간 담당자, 다음 날 아침 출근자, <b>삼성 설비 · 랩 설비</b> 쪽에 상황을 모두 공유</li>
+      <li>"내일 아침에 리셋 눌러주시고, 문제 생기면 연락 주세요"라고 부탁하고 퇴근</li>
+      <li>이후로 문제 있다는 연락이 없어서 잘 된 줄 알았음</li>
+    </ol>
+  </section>
+
+  <section class="s2">
+    <h2><span class="num">2</span>문제 상황 <span class="tag">오늘</span></h2>
+    <p style="margin:0">갑자기 삼성 설비 담당자에게서 전화가 옴.</p>
+    <div class="quote">"채린님, OOO도 안 하고 그냥 퇴근하셨더라고요?"</div>
+    <ul>
+      <li>그동안 한 조치를 설명했지만 <b>듣지도 않고</b> "제대로 안 하고 가서 문제 생겼다"며 <mark>책임 전가</mark></li>
+      <li>알고 보니 <b>별로 큰 문제도 아니었음</b></li>
+      <li>그런데도 굳이 <b>린린채의 매니저에게 전화</b>해서 "OOO도 안 해두고 퇴근했다"고 말함</li>
+    </ul>
+  </section>
+
+  <section class="s3">
+    <h2><span class="num">3</span>린린채의 마음</h2>
+    <ul>
+      <li>자기를 <b>책임감 없는 사람</b>으로 만든 것에 크게 화남</li>
+      <li>놓치거나 실수한 부분이 있었던 건 인정함</li>
+      <li>예전에도 그 담당자의 설비 쪽에 폐를 끼친 적이 있어서, "안 그래도 나 안 좋게 볼 텐데"라는 생각에 <b>더 짜증남</b></li>
+    </ul>
+    <div class="ending">😮‍💨 그래도 말하고 나니 좀 풀렸고, 별일 아닌 것 같다고 마무리</div>
+  </section>
+
+  <footer>카톡 스크린샷 2장을 바탕으로 정리함</footer>
+</main>
+</body>
+</html>
