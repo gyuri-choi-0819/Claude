@@ -1,0 +1,269 @@
+<title>뉴욕 3박 신혼 일정</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700;800&family=Noto+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: day tabs drive a schematic Manhattan map (grid-aligned, north tilted); map sticks on the left on desktop, day timelines on the right; stacked on phones */
+:root{
+  --bg:#f4f5f2; --surface:#ffffff; --fg:#1c1e1b; --muted:#646a62; --line:#dfe2dc;
+  --water:#dbe6ee; --land:#fbfbf8; --park:#d5e8cf; --landline:#c9cfc6;
+  --d1:#c4472f; --d2:#2f7d4f; --d3:#2a62a8; --alt:#8a6fb5;
+  --display:"Noto Serif KR",Georgia,serif; --body:"Noto Sans KR",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#121411; --surface:#1b1e1a; --fg:#e9ebe6; --muted:#a0a79c; --line:#30352e;
+  --water:#16242f; --land:#252923; --park:#22392a; --landline:#3a4037;
+  --d1:#f08a72; --d2:#6fc38f; --d3:#7fb0ee; --alt:#b9a0e3; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121411; --surface:#1b1e1a; --fg:#e9ebe6; --muted:#a0a79c; --line:#30352e;
+  --water:#16242f; --land:#252923; --park:#22392a; --landline:#3a4037;
+  --d1:#f08a72; --d2:#6fc38f; --d3:#7fb0ee; --alt:#b9a0e3; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.65;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:36px 64px}
+.wrap{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.3}
+h1{font-size:clamp(28px,5vw,40px);font-weight:800}
+h2{font-size:21px}
+p{margin:0}
+a{color:var(--d3)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--d3);outline-offset:2px}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.lede{color:var(--muted);max-width:68ch;margin-top:10px}
+.note{font-size:13px;color:var(--muted)}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.layout{display:grid;grid-template-columns:minmax(0,440px) minmax(0,1fr);gap:28px;align-items:start}
+@media (max-width:860px){.layout{grid-template-columns:1fr}}
+.mapcol{position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);display:flex;flex-direction:column;gap:10px;min-width:0}
+@media (max-width:860px){.mapcol{position:static}}
+.tabs{display:flex;flex-wrap:wrap;gap:6px}
+.tabs button{font:inherit;font-size:13px;font-weight:700;padding:6px 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+.tabs button[aria-pressed="true"]{background:var(--tc,var(--fg));border-color:var(--tc,var(--fg));color:var(--surface)}
+.tabs button[data-v="all"]{--tc:var(--fg)}
+.tabs button[data-v="d1"]{--tc:var(--d1)} .tabs button[data-v="d2"]{--tc:var(--d2)} .tabs button[data-v="d3"]{--tc:var(--d3)}
+.mapbox{background:var(--water);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+svg#map{display:block;width:100%;height:auto}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{display:inline-block;width:22px;height:0;border-top:3px solid var(--muted)}
+.legend i.s{border-top-style:dashed}
+.legend i.c{border-top-style:dotted;border-top-width:4px}
+.days{display:flex;flex-direction:column;gap:28px;min-width:0}
+.day{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--dc);border-radius:10px;padding:18px 20px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.day.d1{--dc:var(--d1)} .day.d2{--dc:var(--d2)} .day.d3{--dc:var(--d3)}
+.day .top{display:flex;justify-content:space-between;align-items:baseline;gap:8px 16px;flex-wrap:wrap}
+.day h2 span{color:var(--dc);font-family:var(--mono);font-size:15px;margin-right:8px}
+.day .gm{font-size:13px;font-weight:700;text-decoration:none;color:var(--dc);border:1px solid var(--dc);border-radius:6px;padding:4px 10px}
+ol.tl{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+ol.tl li{display:grid;grid-template-columns:52px 26px minmax(0,1fr);gap:0 10px;padding-block:8px;border-top:1px dashed var(--line)}
+ol.tl li:first-child{border-top:0}
+.t{font-family:var(--mono);font-size:13px;color:var(--muted);padding-top:2px}
+.mk{width:22px;height:22px;border-radius:50%;background:var(--dc);color:var(--surface);font-family:var(--mono);font-size:12px;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.mk.h{background:var(--fg)}
+.mk.none{background:transparent;border:1px dashed var(--line)}
+.what b{font-weight:700}
+.what .how{display:block;font-size:13px;color:var(--muted)}
+.alt{font-size:13px;background:var(--bg);border-radius:8px;padding:10px 12px;color:var(--muted)}
+.alt b{color:var(--alt)}
+.checks{display:grid;grid-template-columns:1fr 1fr;gap:10px 24px}
+@media (max-width:640px){.checks{grid-template-columns:1fr}}
+.checks div{display:flex;gap:10px;font-size:14px}
+.checks .box{flex:none;width:14px;height:14px;border:1.5px solid var(--muted);border-radius:3px;margin-top:4px}
+</style>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">Honeymoon · New York · 3박</div>
+  <h1>뉴욕 3박 신혼 일정</h1>
+  <p class="lede">숙소 M Social 호텔(226 W 52nd St)을 기준으로 이동이 짧게 이어지도록 짰습니다. 갤러거스는 호텔 바로 옆 건물이고, 탑오브더락은 걸어서 5분, 버드랜드는 10분입니다. 일몰은 2월 하순 기준 약 17:45입니다.</p>
+</header>
+
+<div class="layout">
+  <div class="mapcol">
+    <div class="tabs" role="group" aria-label="지도에 표시할 날짜">
+      <button type="button" id="tab-all" data-v="all" aria-pressed="true">전체</button>
+      <button type="button" id="tab-d1" data-v="d1" aria-pressed="false">1일차</button>
+      <button type="button" id="tab-d2" data-v="d2" aria-pressed="false">2일차</button>
+      <button type="button" id="tab-d3" data-v="d3" aria-pressed="false">3일차</button>
+    </div>
+    <div class="mapbox"><svg id="map" viewBox="0 0 440 600" role="img" aria-label="맨해튼과 덤보 동선 약도"></svg></div>
+    <div class="legend">
+      <span><i></i>도보</span><span><i class="s"></i>지하철</span><span><i class="c"></i>차량</span><span style="color:var(--alt)"><i class="s" style="border-color:var(--alt)"></i>블루노트 대안</span>
+    </div>
+    <p class="note">"전체" 보기에서는 미드타운 장소 이름을 생략했습니다. 날짜 버튼을 누르면 그날 동선이 확대되어 모든 장소 이름이 보입니다. 거리 비율은 실제와 비슷하게 맞춘 약도입니다. 맨해튼 도로 방향에 맞춰 지도를 기울였고, 북쪽은 나침반 표시 방향입니다.</p>
+  </div>
+
+  <div class="days">
+    <section class="day d1">
+      <div class="top"><h2><span>DAY 1</span>전망대 두 곳과 갤러거스</h2>
+        <a class="gm" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&origin=40.7627,-73.9836&destination=40.7580,-73.9855&waypoints=40.7520,-73.9915%7C40.7536,-73.9832%7C40.7530,-73.9786%7C40.7570,-73.9770%7C40.7593,-73.9794%7C40.7627,-73.9836&travelmode=walking">구글맵 경로</a></div>
+      <ol class="tl">
+        <li><span class="t">11:00</span><span class="mk h">H</span><span class="what"><b>호텔 출발</b><span class="how">50th St 역에서 1호선 → 34th St–Penn Station, 약 10분</span></span></li>
+        <li><span class="t">11:30</span><span class="mk">1</span><span class="what"><b>점심 베이글: Best Bagel &amp; Coffee</b><span class="how">225 W 35th St. 오후 일찍 문을 닫으니 점심 전에 가세요</span></span></li>
+        <li><span class="t">12:30</span><span class="mk">2</span><span class="what"><b>브라이언트파크</b><span class="how">걸어서 10분. 겨울에는 아이스링크와 윈터 빌리지가 열립니다</span></span></li>
+        <li><span class="t">13:30</span><span class="mk">3</span><span class="what"><b>써밋 원 밴더빌트</b><span class="how">공원에서 걸어서 3분. 낮 시간대 예약, 거울 바닥이라 바지 추천</span></span></li>
+        <li><span class="t">15:30</span><span class="mk">4</span><span class="what"><b>5번가 쇼핑</b><span class="how">42nd St에서 50th St 방향으로 걸으며 매장 구경</span></span></li>
+        <li><span class="t">17:15</span><span class="mk">5</span><span class="what"><b>탑오브더락</b><span class="how">해 지기 전에 입장해서 노을과 야경을 함께 보기</span></span></li>
+        <li><span class="t">19:30</span><span class="mk h">H</span><span class="what"><b>갤러거스 저녁</b><span class="how">228 W 52nd St, 호텔 바로 옆. 걸어서 5분</span></span></li>
+        <li><span class="t">21:00</span><span class="mk">6</span><span class="what"><b>타임스스퀘어 밤거리</b><span class="how">호텔에서 걸어서 7분</span></span></li>
+      </ol>
+    </section>
+
+    <section class="day d2">
+      <div class="top"><h2><span>DAY 2</span>센트럴파크와 버드랜드</h2>
+        <a class="gm" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&origin=40.7627,-73.9836&destination=40.7580,-73.9855&waypoints=40.7663,-73.9741%7C40.7740,-73.9708%7C40.7756,-73.9718%7C40.7681,-73.9819%7C40.7630,-73.9735%7C40.7627,-73.9836%7C40.7590,-73.9898&travelmode=walking">구글맵 경로</a></div>
+      <ol class="tl">
+        <li><span class="t">10:00</span><span class="mk h">H</span><span class="what"><b>호텔 출발</b><span class="how">센트럴파크 남쪽 입구까지 걸어서 10분</span></span></li>
+        <li><span class="t">10:15</span><span class="mk">1</span><span class="what"><b>갭스토 브릿지</b><span class="how">공원 남동쪽. 커플 사진 명소</span></span></li>
+        <li><span class="t">10:45</span><span class="mk">2</span><span class="what"><b>더 몰 → 베데스다 테라스</b><span class="how">가로수길을 따라 북쪽으로 걷기</span></span></li>
+        <li><span class="t">11:30</span><span class="mk">3</span><span class="what"><b>보우 브릿지</b><span class="how">베데스다에서 걸어서 5분</span></span></li>
+        <li><span class="t">12:30</span><span class="mk">4</span><span class="what"><b>점심: 콜럼버스 서클</b><span class="how">공원 남서쪽 출구. 쇼핑몰 안 푸드코트와 레스토랑</span></span></li>
+        <li><span class="t">14:00</span><span class="mk">5</span><span class="what"><b>5번가 쇼핑 (57th St 주변)</b><span class="how">명품·플래그십 매장 거리</span></span></li>
+        <li><span class="t">17:00</span><span class="mk h">H</span><span class="what"><b>호텔에서 휴식</b><span class="how">옷 갈아입고 저녁 준비</span></span></li>
+        <li><span class="t">19:00</span><span class="mk">6</span><span class="what"><b>버드랜드 저녁과 공연</b><span class="how">315 W 44th St, 걸어서 10분. 30분 일찍 도착하면 앞자리</span></span></li>
+        <li><span class="t">21:30</span><span class="mk">7</span><span class="what"><b>타임스스퀘어</b><span class="how">버드랜드에서 걸어서 5분</span></span></li>
+      </ol>
+      <p class="alt"><b>블루노트로 바꾸려면</b> 20:00 공연. 50th St 역에서 A·C·E 노선을 타고 West 4th St 역까지 약 15분입니다. 저녁은 근처 웨스트빌리지에서 드세요.</p>
+    </section>
+
+    <section class="day d3">
+      <div class="top"><h2><span>DAY 3</span>코리아타운과 덤보 스냅</h2>
+        <a class="gm" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&origin=40.7627,-73.9836&destination=40.7033,-73.9894&waypoints=40.7508,-73.9890%7C40.7473,-73.9862%7C40.7243,-73.9976%7C40.7061,-73.9969&travelmode=driving">구글맵 경로</a></div>
+      <ol class="tl">
+        <li><span class="t">09:45</span><span class="mk h">H</span><span class="what"><b>호텔 출발</b><span class="how">50th St 역에서 1호선 → 34th St, 약 10분</span></span></li>
+        <li><span class="t">10:00</span><span class="mk">1</span><span class="what"><b>메이시스 헤럴드스퀘어 쇼핑</b><span class="how">34th St와 Broadway</span></span></li>
+        <li><span class="t">11:45</span><span class="mk">2</span><span class="what"><b>점심: 북창동순두부</b><span class="how">5 W 32nd St, 코리아타운. 메이시스에서 걸어서 5분</span></span></li>
+        <li><span class="t">14:00</span><span class="mk">3</span><span class="what"><b>스냅 촬영 시작: 소호</b><span class="how">차량 투어. 철제 외관 건물과 자갈길 골목</span></span></li>
+        <li><span class="t">16:00</span><span class="mk">4</span><span class="what"><b>브루클린 브릿지</b><span class="how">다리 위 산책로 촬영</span></span></li>
+        <li><span class="t">17:00</span><span class="mk">5</span><span class="what"><b>덤보 (워싱턴 스트리트)</b><span class="how">맨해튼 브릿지 뷰, 일몰 약 17:45에 맞춰 마무리</span></span></li>
+        <li><span class="t">18:30</span><span class="mk none"></span><span class="what"><b>저녁</b><span class="how">덤보에서 먹거나 차량으로 호텔 근처로 복귀</span></span></li>
+      </ol>
+    </section>
+
+    <section class="day" style="--dc:var(--muted)">
+      <h2>미리 예약할 것</h2>
+      <div class="checks">
+        <div><span class="box"></span><span>써밋 원 밴더빌트, 1일차 13:30 전후</span></div>
+        <div><span class="box"></span><span>탑오브더락, 1일차 17:15 전후 (일몰 시간대)</span></div>
+        <div><span class="box"></span><span>갤러거스, 1일차 19:30 (OpenTable)</span></div>
+        <div><span class="box"></span><span>버드랜드 티켓, 2일차 19:00 전후 공연 (TicketWeb)</span></div>
+        <div><span class="box"></span><span>스냅 촬영과 차량 투어, 3일차 14:00–18:00</span></div>
+        <div><span class="box"></span><span>날씨 나쁠 때 일정 변경 조건 (전망대, 스냅)</span></div>
+      </div>
+    </section>
+  </div>
+</div>
+</div>
+
+<script>
+(function(){
+  var P={
+    hotel:{n:'호텔 · 갤러거스',ll:[40.7627,-73.9836],s:'l',h:1},
+    bagel:{n:'베이글',ll:[40.7520,-73.9915],s:'l'},
+    bryant:{n:'브라이언트파크',ll:[40.7536,-73.9832],s:'l'},
+    summit:{n:'써밋',ll:[40.7530,-73.9786],s:'r'},
+    fifth:{n:'5번가',ll:[40.7570,-73.9770],s:'r'},
+    tor:{n:'탑오브더락',ll:[40.7593,-73.9794],s:'r'},
+    ts:{n:'타임스스퀘어',ll:[40.7580,-73.9855],s:'r'},
+    gapstow:{n:'갭스토 브릿지',ll:[40.7663,-73.9741],s:'r'},
+    bethesda:{n:'베데스다',ll:[40.7740,-73.9708],s:'r'},
+    bow:{n:'보우 브릿지',ll:[40.7762,-73.9726],s:'l'},
+    columbus:{n:'콜럼버스 서클',ll:[40.7681,-73.9819],s:'l'},
+    shop5:{n:'5번가 57th',ll:[40.7630,-73.9735],s:'r'},
+    birdland:{n:'버드랜드',ll:[40.7590,-73.9898],s:'l'},
+    bluenote:{n:'블루노트',ll:[40.7309,-74.0007],s:'l'},
+    macys:{n:'메이시스',ll:[40.7508,-73.9890],s:'l'},
+    bcd:{n:'북창동순두부',ll:[40.7473,-73.9862],s:'r'},
+    soho:{n:'소호',ll:[40.7243,-73.9976],s:'l'},
+    bbridge:{n:'브루클린 브릿지',ll:[40.7061,-73.9969],s:'l'},
+    dumbo:{n:'덤보',ll:[40.7033,-73.9894],s:'r'}
+  };
+  // route: [from,to,mode] mode w=walk s=subway c=car
+  var D={
+    d1:{c:'--d1',stops:['bagel','bryant','summit','fifth','tor','ts'],seg:[['hotel','bagel','s'],['bagel','bryant','w'],['bryant','summit','w'],['summit','fifth','w'],['fifth','tor','w'],['tor','hotel','w'],['hotel','ts','w']]},
+    d2:{c:'--d2',stops:['gapstow','bethesda','bow','columbus','shop5','birdland','ts'],seg:[['hotel','gapstow','w'],['gapstow','bethesda','w'],['bethesda','bow','w'],['bow','columbus','w'],['columbus','shop5','w'],['shop5','hotel','w'],['hotel','birdland','w'],['birdland','ts','w']],alt:[['hotel','bluenote','s']]},
+    d3:{c:'--d3',stops:['macys','bcd','soho','bbridge','dumbo'],seg:[['hotel','macys','s'],['macys','bcd','w'],['bcd','soho','c'],['soho','bbridge','c'],['bbridge','dumbo','c'],['dumbo','hotel','c']]}
+  };
+  var MAN=[[40.7010,-74.0160],[40.7110,-74.0165],[40.7200,-74.0130],[40.7300,-74.0105],[40.7400,-74.0095],[40.7480,-74.0080],[40.7560,-74.0045],[40.7640,-73.9990],[40.7720,-73.9940],[40.7800,-73.9890],[40.7900,-73.9810],[40.8000,-73.9730],[40.7950,-73.9330],[40.7850,-73.9420],[40.7760,-73.9430],[40.7650,-73.9530],[40.7560,-73.9620],[40.7450,-73.9710],[40.7350,-73.9740],[40.7250,-73.9720],[40.7140,-73.9760],[40.7100,-73.9790],[40.7080,-73.9960],[40.7040,-74.0060],[40.7010,-74.0130]];
+  var BK=[[40.6900,-74.0200],[40.6950,-73.9990],[40.7000,-73.9960],[40.7035,-73.9915],[40.7040,-73.9860],[40.7030,-73.9800],[40.7050,-73.9720],[40.7110,-73.9680],[40.7200,-73.9620],[40.7300,-73.9600],[40.7400,-73.9600],[40.7500,-73.9530],[40.7600,-73.9450],[40.7700,-73.9370],[40.7800,-73.9230],[40.8100,-73.9000],[40.6500,-73.9000],[40.6500,-74.0200]];
+  var CP=[[40.7644,-73.9730],[40.7681,-73.9819],[40.8006,-73.9583],[40.7968,-73.9492]];
+  var BB=[[40.7115,-74.0010],[40.7005,-73.9890]];
+  var NS='http://www.w3.org/2000/svg',W=440,H=600,PAD=46;
+  var lat0=40.75,cos0=Math.cos(lat0*Math.PI/180),th=29*Math.PI/180,ct=Math.cos(th),st=Math.sin(th);
+  function km(ll){var x=(ll[1]+73.98)*cos0*111.32,y=(ll[0]-lat0)*110.57;return [x*ct-y*st,-(x*st+y*ct)];}
+  function css(v){return 'var('+v+')';}
+  function el(tag,attrs,parent){var e=document.createElementNS(NS,tag);for(var k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e;}
+  var svg=document.getElementById('map');
+
+  function render(view){
+    while(svg.firstChild)svg.removeChild(svg.firstChild);
+    var days=view==='all'?['d1','d2','d3']:[view];
+    var keys={hotel:1};
+    days.forEach(function(d){D[d].stops.forEach(function(k){keys[k]=1;});(D[d].alt||[]).forEach(function(s){keys[s[1]]=1;});});
+    var pts=Object.keys(keys).map(function(k){return km(P[k].ll);});
+    var xs=pts.map(function(p){return p[0];}),ys=pts.map(function(p){return p[1];});
+    var minx=Math.min.apply(0,xs),maxx=Math.max.apply(0,xs),miny=Math.min.apply(0,ys),maxy=Math.max.apply(0,ys);
+    var s=Math.min((W-2*PAD-90)/Math.max(maxx-minx,.3),(H-2*PAD)/Math.max(maxy-miny,.3),420);
+    var cx=(minx+maxx)/2,cy=(miny+maxy)/2;
+    function xy(ll){var p=km(ll);return [W/2+(p[0]-cx)*s,H/2+(p[1]-cy)*s];}
+    function poly(arr){return arr.map(function(ll){var p=xy(ll);return p[0].toFixed(1)+','+p[1].toFixed(1);}).join(' ');}
+    el('rect',{x:0,y:0,width:W,height:H,fill:css('--water')},svg);
+    el('polygon',{points:poly(BK),fill:css('--land'),stroke:css('--landline'),'stroke-width':1},svg);
+    el('polygon',{points:poly(MAN),fill:css('--land'),stroke:css('--landline'),'stroke-width':1},svg);
+    el('polygon',{points:poly(CP),fill:css('--park')},svg);
+    var b0=xy(BB[0]),b1=xy(BB[1]);
+    el('line',{x1:b0[0],y1:b0[1],x2:b1[0],y2:b1[1],stroke:css('--landline'),'stroke-width':4,'stroke-linecap':'round'},svg);
+    // area labels
+    function area(t,ll,size){var p=xy(ll);if(p[0]<10||p[0]>W-10||p[1]<10||p[1]>H-10)return;var e=el('text',{x:p[0],y:p[1],'text-anchor':'middle','font-size':size,'font-family':'Noto Sans KR, sans-serif','font-weight':700,fill:css('--muted'),opacity:.55,'letter-spacing':'.08em'},svg);e.textContent=t;}
+    area('MANHATTAN',[40.7420,-73.9935],12);area('BROOKLYN',[40.6960,-73.9800],12);area('CENTRAL PARK',[40.7800,-73.9640],11);
+    // routes
+    function seg(a,b,mode,color,w){
+      var p=xy(P[a].ll),q=xy(P[b].ll);
+      var at={x1:p[0],y1:p[1],x2:q[0],y2:q[1],stroke:color,'stroke-width':w,'stroke-linecap':'round',fill:'none'};
+      if(mode==='s')at['stroke-dasharray']='7 6';
+      if(mode==='c')at['stroke-dasharray']='1 7';
+      if(mode==='c')at['stroke-width']=w+1.5;
+      el('line',at,svg);
+    }
+    days.forEach(function(d){
+      (D[d].alt||[]).forEach(function(sg){seg(sg[0],sg[1],sg[2],css('--alt'),2.5);});
+      D[d].seg.forEach(function(sg){seg(sg[0],sg[1],sg[2],css(D[d].c),3);});
+    });
+    // markers
+    var placed={};
+    var ALLLAB={hotel:1,bow:1,columbus:1,bluenote:1,soho:1,bbridge:1,dumbo:1,bcd:1};
+    function marker(k,label,color){
+      var p=xy(P[k].ll);
+      var g=el('g',{},svg);
+      el('circle',{cx:p[0],cy:p[1],r:10,fill:color,stroke:css('--land'),'stroke-width':2},g);
+      var t=el('text',{x:p[0],y:p[1]+4,'text-anchor':'middle','font-size':11,'font-family':'IBM Plex Mono, monospace','font-weight':500,fill:css('--land')},g);t.textContent=label;
+      if(view==='all'&&!ALLLAB[k])return;
+      var left=P[k].s==='l';
+      var n=el('text',{x:p[0]+(left?-15:15),y:p[1]+4,'text-anchor':left?'end':'start','font-size':12,'font-family':'Noto Sans KR, sans-serif','font-weight':700,fill:css('--fg'),stroke:css('--land'),'stroke-width':3.5,'paint-order':'stroke','stroke-linejoin':'round'},g);n.textContent=P[k].n;
+    }
+    days.forEach(function(d){
+      if(view!=='all'){D[d].stops.forEach(function(k,i){marker(k,String(i+1),css(D[d].c));});}
+      else{D[d].stops.forEach(function(k){if(!placed[k]){placed[k]=1;marker(k,d.slice(1),css(D[d].c));}});}
+      (D[d].alt||[]).forEach(function(sg){marker(sg[1],'B',css('--alt'));});
+    });
+    marker('hotel','H',css('--fg'));
+    // compass (north is rotated)
+    var cxp=W-30,cyp=34,nx=-st,ny=-ct;
+    el('circle',{cx:cxp,cy:cyp,r:16,fill:css('--land'),stroke:css('--landline')},svg);
+    el('line',{x1:cxp-nx*10,y1:cyp-ny*10,x2:cxp+nx*10,y2:cyp+ny*10,stroke:css('--fg'),'stroke-width':2,'stroke-linecap':'round'},svg);
+    el('circle',{cx:cxp+nx*10,cy:cyp+ny*10,r:2.5,fill:css('--d1')},svg);
+    var nt=el('text',{x:cxp+nx*25,y:cyp+ny*25+4,'text-anchor':'middle','font-size':11,'font-weight':700,'font-family':'IBM Plex Mono, monospace',fill:css('--fg')},svg);nt.textContent='N';
+    // scale bar
+    var choices=[0.25,0.5,1,2],len=choices[0];
+    choices.forEach(function(c){if(c*s<=120)len=c;});
+    var px=len*s;
+    el('line',{x1:16,y1:H-20,x2:16+px,y2:H-20,stroke:css('--fg'),'stroke-width':2},svg);
+    el('line',{x1:16,y1:H-25,x2:16,y2:H-15,stroke:css('--fg'),'stroke-width':2},svg);
+    el('line',{x1:16+px,y1:H-25,x2:16+px,y2:H-15,stroke:css('--fg'),'stroke-width':2},svg);
+    var sl=el('text',{x:16+px+6,y:H-16,'font-size':11,'font-family':'IBM Plex Mono, monospace',fill:css('--fg'),stroke:css('--water'),'stroke-width':3,'paint-order':'stroke'},svg);sl.textContent=len<1?(len*1000)+'m':len+'km';
+  }
+
+  var btns=document.querySelectorAll('.tabs button');
+  function select(v){btns.forEach(function(b){b.setAttribute('aria-pressed',b.dataset.v===v?'true':'false');});render(v);}
+  btns.forEach(function(b){b.addEventListener('click',function(){select(b.dataset.v);});});
+  select('all');
+})();
+</script>
