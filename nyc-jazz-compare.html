@@ -1,0 +1,158 @@
+<title>블루노트 vs 버드랜드</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700;800&family=Noto+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: two clubs side by side as columns (stacked on phones), a comparison table, then per-topic detail and a pick */
+:root{
+  --bg:#f3f3f6; --surface:#ffffff; --fg:#1b1b24; --muted:#62627a; --line:#dedfe8;
+  --blue:#1f4fa3; --bird:#a05a12; --chip:#e8ecf6; --chip2:#f5ece2;
+  --display:"Noto Serif KR",Georgia,serif; --body:"Noto Sans KR",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#111219; --surface:#1a1b24; --fg:#e9e9f0; --muted:#a0a0b6; --line:#2d2e3b;
+  --blue:#8fb0f0; --bird:#e7aa6a; --chip:#222b40; --chip2:#3a2c1e; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111219; --surface:#1a1b24; --fg:#e9e9f0; --muted:#a0a0b6; --line:#2d2e3b;
+  --blue:#8fb0f0; --bird:#e7aa6a; --chip:#222b40; --chip2:#3a2c1e; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.7;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 64px}
+.wrap{max-width:900px;margin:0 auto;display:flex;flex-direction:column;gap:44px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.3}
+h1{font-size:clamp(28px,5vw,40px);font-weight:800}
+h2{font-size:23px}
+h3{font-size:17px}
+p{margin:0}
+a{color:var(--blue)}
+a:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.lede{color:var(--muted);max-width:65ch;margin-top:12px}
+.note{font-size:13px;color:var(--muted)}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+section{display:flex;flex-direction:column;gap:16px}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:680px){.duo{grid-template-columns:1fr}}
+.club{background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--c);border-radius:10px;padding:18px 20px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.club.bn{--c:var(--blue);--cc:var(--chip)}
+.club.bd{--c:var(--bird);--cc:var(--chip2)}
+.club .name{color:var(--c)}
+.club .addr{font-size:13px;color:var(--muted)}
+.club .big{font-family:var(--mono);font-size:22px;color:var(--c)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{background:var(--cc);color:var(--c);font-size:12px;padding:3px 10px;border-radius:999px;font-weight:500}
+.club ul{margin:0;padding-left:18px}
+.links{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.links a{text-decoration:none;font-size:13px;font-weight:700;border:1px solid var(--c);color:var(--c);padding:6px 12px;border-radius:6px}
+.links a:hover{background:var(--cc)}
+.tablebox{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:640px;font-size:14px}
+th,td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;letter-spacing:.05em;color:var(--muted);font-weight:500}
+th.bn{color:var(--blue)} th.bd{color:var(--bird)}
+td:first-child{color:var(--muted);font-size:13px;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+.reviews{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:680px){.reviews{grid-template-columns:1fr}}
+.rv{display:flex;flex-direction:column;gap:8px;min-width:0}
+.rv h3{font-size:15px}
+.rv .plus,.rv .minus{font-size:14px;padding:10px 14px;border-radius:8px;background:var(--surface);border:1px solid var(--line)}
+.rv .plus b{color:var(--blue)} .rv.bd .plus b{color:var(--bird)}
+.rv .minus b{color:var(--muted)}
+.pick{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 20px;display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media (max-width:680px){.pick{grid-template-columns:1fr}}
+.pick div{display:flex;flex-direction:column;gap:4px}
+.pick .k{font-size:12px;font-weight:700;letter-spacing:.06em}
+ol.steps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;max-width:70ch}
+</style>
+
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">New York Jazz · 2인 기준</div>
+  <h1>블루노트 vs 버드랜드</h1>
+  <p class="lede">뉴욕을 대표하는 두 재즈클럽을 가격, 예약 방법, 분위기, 한국인 후기, 위치로 비교했습니다. 블루노트는 그리니치 빌리지의 작고 빽빽한 전설적인 클럽이고, 버드랜드는 극장가에 있는 넓고 쾌적한 디너 재즈클럽입니다.</p>
+</header>
+
+<section>
+  <div class="duo">
+    <div class="club bn">
+      <h2 class="name">블루노트 Blue Note</h2>
+      <span class="addr">131 W 3rd St · 그리니치 빌리지 · 1981년 개업</span>
+      <div class="chips"><span class="chip">유명 아티스트</span><span class="chip">좁고 어두움</span><span class="chip">합석</span></div>
+      <span class="big">2인 약 $150~220</span>
+      <p class="note">티켓 1인 $40~65 + 1인 $20 최소 주문 + 세금·팁 기준. 유명 헤드라이너는 1인 $100~250까지 올라갑니다.</p>
+      <div class="links">
+        <a href="https://www.bluenotejazz.com/nyc/" target="_blank" rel="noopener">공식 공연 일정·예매</a>
+        <a href="https://www.google.com/maps/search/?api=1&query=Blue+Note+Jazz+Club+131+W+3rd+St+New+York" target="_blank" rel="noopener">구글맵</a>
+      </div>
+    </div>
+    <div class="club bd">
+      <h2 class="name">버드랜드 Birdland</h2>
+      <span class="addr">315 W 44th St · 극장가(헬스키친) · 1949년 이름 유래</span>
+      <div class="chips"><span class="chip">넓고 쾌적</span><span class="chip">음향 좋음</span><span class="chip">빅밴드</span></div>
+      <span class="big">2인 약 $140~200</span>
+      <p class="note">티켓 1인 $35~60 + 1인 $20 최소 주문 + 세금·팁 기준. 저녁을 함께 먹으면 2인 $200~260 정도입니다.</p>
+      <div class="links">
+        <a href="https://www.birdlandjazz.com/" target="_blank" rel="noopener">공식 공연 일정·예매</a>
+        <a href="https://www.google.com/maps/search/?api=1&query=Birdland+Jazz+Club+315+W+44th+St+New+York" target="_blank" rel="noopener">구글맵</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>항목별 비교</h2>
+  <div class="tablebox">
+  <table>
+    <thead><tr><th>항목</th><th class="bn">블루노트</th><th class="bd">버드랜드</th></tr></thead>
+    <tbody>
+      <tr><td>티켓 (1인)</td><td><span class="num">$40~65</span> 보통 공연, 헤드라이너 <span class="num">$100~250</span>. 바 좌석이 테이블보다 저렴</td><td><span class="num">$35~60</span>. 바 좌석과 테이블 가격이 거의 같음</td></tr>
+      <tr><td>최소 주문</td><td>1인 <span class="num">$20</span> (음식·음료)</td><td>1인 <span class="num">$20</span> (세트당, 음식·음료)</td></tr>
+      <tr><td>공연 시간</td><td>보통 20:00, 22:30 두 번. 일요일 낮 재즈 브런치</td><td>보통 17:30, 19:00 전후, 21:30 전후 하루 2~3번</td></tr>
+      <tr><td>예약 방법</td><td>공식 사이트 → TicketWeb에서만 판매. 다른 사이트 티켓은 입장 불가</td><td>공식 사이트 → TicketWeb에서 판매. 환불 불가, 24시간 전 취소 시 크레딧</td></tr>
+      <tr><td>좌석 배정</td><td>도착 순서대로. 긴 테이블에 모르는 사람과 붙어 앉음</td><td>도착 순서대로. 2인 테이블이 있어 커플끼리 앉기 쉬움</td></tr>
+      <tr><td>공간</td><td>약 200석, 지하 같은 느낌의 좁고 어두운 홀</td><td>지상층, 넓은 좌석과 세련된 조명</td></tr>
+      <tr><td>음식</td><td>간단한 디너 메뉴와 칵테일. 음식보다 공연 중심</td><td>남부·케이준 요리(검보, 잠발라야, 캣피시). 공연 보며 저녁 식사 가능</td></tr>
+      <tr><td>나이 제한</td><td>바 좌석 21세 이상</td><td>10세 이상</td></tr>
+      <tr><td>가까운 역</td><td>West 4th St 역 (A·C·E·B·D·F·M) 도보 3분</td><td>42nd St–Port Authority 역 (A·C·E) 도보 5분, 타임스스퀘어 도보 7분</td></tr>
+      <tr><td>함께 묶기 좋은 곳</td><td>워싱턴 스퀘어 파크, 웨스트빌리지 저녁</td><td>브로드웨이 뮤지컬, 갤러거스·킨스 스테이크</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="note">가격과 공연 시간은 아티스트와 날짜마다 달라집니다. 2026년 공연 목록, 가이드, 후기 기준이니 예매할 때 공식 사이트에서 정확한 금액을 확인하세요. TicketWeb 결제 시 수수료가 1인 $5~10 정도 붙습니다.</p>
+</section>
+
+<section>
+  <h2>한국인 후기 요약</h2>
+  <div class="reviews">
+    <div class="rv bn">
+      <h3>블루노트</h3>
+      <div class="plus"><b>좋았던 점</b> 좁고 어둡지만 재즈를 제대로 살리는 공간. 유명 아티스트를 코앞에서 보는 경험이 특별했다는 후기가 많습니다.</div>
+      <div class="minus"><b>아쉬운 점</b> 예매는 필수이고 인기 공연은 빨리 매진됩니다. 자리가 빽빽해 옆 사람과 어깨가 닿고, 연휴 시즌에는 티켓이 1인 $200 수준까지 올라갑니다.</div>
+    </div>
+    <div class="rv bd">
+      <h3>버드랜드</h3>
+      <div class="plus"><b>좋았던 점</b> 인테리어가 세련되고 음향이 좋아 어느 자리에서도 잘 들립니다. 좌석이 넓고, 빅밴드 공연 추천이 많습니다.</div>
+      <div class="minus"><b>아쉬운 점</b> 바 좌석에서는 무대가 잘 안 보이니 테이블을 고르세요. 앞자리를 원하면 30분 전부터 건물 밖에서 줄을 서야 하고, 음식은 비싸고 맛은 호불호가 갈립니다.</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>예약 순서</h2>
+  <ol class="steps">
+    <li>공식 사이트의 공연 캘린더에서 날짜와 아티스트를 고릅니다. 블루노트는 bluenotejazz.com/nyc, 버드랜드는 birdlandjazz.com입니다.</li>
+    <li>좌석 종류(테이블 또는 바)와 인원 2명을 선택하고 TicketWeb에서 결제합니다. 블루노트는 리셀 사이트 티켓으로 입장할 수 없으니 꼭 공식 링크로 사세요.</li>
+    <li>좌석은 도착 순서대로 배정됩니다. 공연 30~45분 전에 도착하면 무대 가까운 자리를 잡을 수 있습니다.</li>
+    <li>입장 후 1인 $20 이상 음식이나 음료를 주문하고, 계산서에 세금과 팁 18~20%를 더해 결제합니다.</li>
+  </ol>
+</section>
+
+<section>
+  <h2>신혼여행이라면</h2>
+  <div class="pick">
+    <div><span class="k" style="color:var(--bird)">편하게 저녁과 공연을 함께</span><b>버드랜드</b><p class="note">2인 테이블에 앉아 저녁을 먹으며 공연을 볼 수 있습니다. 뮤지컬이나 극장가 스테이크하우스와 동선이 이어져 하루 일정을 짜기 쉽습니다.</p></div>
+    <div><span class="k" style="color:var(--blue)">뉴욕 재즈의 상징을 경험</span><b>블루노트</b><p class="note">좋아하는 아티스트가 공연한다면 블루노트입니다. 좁고 시끌벅적하지만 "뉴욕에서 재즈 봤다"는 느낌이 가장 강합니다. 22:30 공연은 덜 붐비는 편입니다.</p></div>
+  </div>
+</section>
+
+</div>
